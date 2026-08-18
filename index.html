@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI Chat</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  overflow: hidden;
+}
+
+.app {
+  width: 100%;
+  height: 100dvh;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #151515;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ヘッダー */
+.header {
+  height: 60px;
+  min-height: 60px;
+  background: #1c1c1c;
+  border-bottom: 1px solid #2c2c2c;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  z-index: 10;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #555, #222);
+  border: 1px solid #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.header-status {
+  color: #888;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* トーク */
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 12px 90px;
+  scroll-behavior: smooth;
+}
+
+.message-row {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 14px;
+  gap: 7px;
+}
+
+.message-row.user {
+  justify-content: flex-end;
+}
+
+.ai-icon {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #555, #222);
+  border: 1px solid #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.message-content {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  max-width: 78%;
+}
+
+.user .message-content {
+  flex-direction: row-reverse;
+}
+
+.bubble {
+  padding: 10px 13px;
+  border-radius: 17px;
+  font-size: 15px;
+  line-height: 1.45;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.ai .bubble {
+  background: #2b2b2b;
+  border-bottom-left-radius: 5px;
+}
+
+.user .bubble {
+  background: #4a4a4a;
+  border-bottom-right-radius: 5px;
+}
+
+.time {
+  color: #777;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+/* 入力欄 */
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  min-height: 70px;
+  padding: 10px 12px;
+  background: rgba(21, 21, 21, 0.96);
+  border-top: 1px solid #2c2c2c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+
+.input-box {
+  flex: 1;
+  min-width: 0;
+  background: #292929;
+  border: 1px solid #3a3a3a;
+  border-radius: 22px;
+  color: #fff;
+  padding: 11px 15px;
+  font-size: 15px;
+  outline: none;
+}
+
+.input-box::placeholder {
+  color: #777;
+}
+
+.input-box:focus {
+  border-color: #555;
+}
+
+.send-button {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.send-button:active {
+  transform: scale(0.92);
+}
+
+/* AI入力中 */
+.typing {
+  display: flex;
+  gap: 4px;
+  padding: 11px 14px;
+}
+
+.typing span {
+  width: 5px;
+  height: 5px;
+  background: #888;
+  border-radius: 50%;
+  animation: typing 1s infinite;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: .3s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: .5;
+  }
+
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header class="header">
+    <div class="profile-icon">AI</div>
+
+    <div class="header-info">
+      <div class="header-name">AI Chat</div>
+      <div class="header-status">オンライン</div>
+    </div>
+  </header>
+
+  <main class="chat" id="chat">
+
+    <div class="message-row ai">
+      <div class="ai-icon">AI</div>
+
+      <div class="message-content">
+        <div class="bubble">こんにちは。今日はどうしたの？</div>
+        <span class="time">22:30</span>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="input-area">
+    <input
+      id="messageInput"
+      class="input-box"
+      type="text"
+      placeholder="メッセージを入力..."
+      autocomplete="off"
+    >
+
+    <button id="sendButton" class="send-button">➤</button>
+  </div>
+
+</div>
+
+<script>
+const input = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+const chat = document.getElementById("chat");
+
+/* 現在時刻 */
+function getTime() {
+  const now = new Date();
+
+  return now.toLocaleTimeString("ja-JP", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+}
+
+/* メッセージ追加 */
+function addMessage(text, type) {
+
+  const row = document.createElement("div");
+  row.className = "message-row " + type;
+
+  if (type === "ai") {
+    const icon = document.createElement("div");
+    icon.className = "ai-icon";
+    icon.textContent = "AI";
+    row.appendChild(icon);
+  }
+
+  const content = document.createElement("div");
+  content.className = "message-content";
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = text;
+
+  const time = document.createElement("span");
+  time.className = "time";
+  time.textContent = getTime();
+
+  content.appendChild(bubble);
+  content.appendChild(time);
+  row.appendChild(content);
+
+  chat.appendChild(row);
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* AI入力中表示 */
+function showTyping() {
+
+  const row = document.createElement("div");
+  row.className = "message-row ai";
+  row.id = "typingMessage";
+
+  const icon = document.createElement("div");
+  icon.className = "ai-icon";
+  icon.textContent = "AI";
+
+  const content = document.createElement("div");
+  content.className = "message-content";
+
+  const typing = document.createElement("div");
+  typing.className = "bubble typing";
+
+  typing.innerHTML = `
+    <span></span>
+    <span></span>
+    <span></span>
+  `;
+
+  content.appendChild(typing);
+  row.appendChild(icon);
+  row.appendChild(content);
+
+  chat.appendChild(row);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* AI入力中を削除 */
+function removeTyping() {
+  const typing = document.getElementById("typingMessage");
+
+  if (typing) {
+    typing.remove();
+  }
+}
+
+/* メッセージ送信 */
+function sendMessage() {
+
+  const text = input.value.trim();
+
+  if (!text) return;
+
+  /* 自分のメッセージ */
+  addMessage(text, "user");
+
+  input.value = "";
+  input.focus();
+
+  /* 1秒後にAIが返信 */
+  setTimeout(() => {
+
+    showTyping();
+
+    setTimeout(() => {
+
+      removeTyping();
+
+      addMessage(
+        "メッセージありがとう。これはダミーのAI返信だよ。",
+        "ai"
+      );
+
+    }, 600);
+
+  }, 1000);
+}
+
+/* 送信ボタン */
+sendButton.addEventListener("click", sendMessage);
+
+/* Enterキーでも送信 */
+input.addEventListener("keydown", (event) => {
+
+  if (event.key === "Enter") {
+    event.preventDefault();
+    sendMessage();
+  }
+
+});
+
+/* 初期表示位置 */
+chat.scrollTop = chat.scrollHeight;
+</script>
+
+</body>
+</html>
