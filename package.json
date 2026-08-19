@@ -10,6 +10,7 @@
         "dev": "bun --watch index.js"
     },
     "dependencies": {
-        "elysia": "^1.4.26"
+      "@google/generative-ai": "^0.24.1",
+      "elysia": "^1.4.26"
     }
 }

@@ -365,7 +365,7 @@ function removeTyping() {
 }
 
 /* メッセージ送信 */
-function sendMessage() {
+async function sendMessage() {
 
   const text = input.value.trim();
 
@@ -377,8 +377,34 @@ function sendMessage() {
   input.value = "";
   input.focus();
 
-/* 返信(ダミー) */
-addMessage("メッセージありがとう。これはダミーの AI 返信だよ。","ai");
+  /* 入力中表示 */
+  showTyping();
+
+  try {
+    /* Geminiに送信*/
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: text })
+    });
+
+    const data = await response.json();
+
+    /* 入力中を削除 */
+    removeTyping();
+
+    if (data.error) {
+      addMessage("エラー：" + data.error, "ai");
+    } else {
+      addMessage(data.reply, "ai");
+    }
+  } catch (error) {
+    removeTyping();
+    addMessage("通信エラーが発生しました", "ai");
+  }
+}
 
 /* 送信ボタン */
 sendButton.addEventListener("click", sendMessage);
