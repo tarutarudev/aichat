@@ -16,3 +16,6 @@ AIと会話できるチャットアプリです。
 1. Google GeminiのAPIキーを`.env`に入れる
    (GEMINI_API_KEY="ここにAPIキー入れてね")
 3. `bun start`を実行し、`https://localhost:3000`へブラウザでアクセス
+
+### サンプル
+![サンプル](docs/image.png)
