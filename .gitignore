@@ -1,18 +1,9 @@
 # Dependencies
 node_modules/
-.bun/
-*.lock
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
+bun.lock
 
 # Environment
 .env
-.env.local
-*.env.*
 
 # Binary
-server
-aichat
+mainServer
