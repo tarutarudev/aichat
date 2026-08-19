@@ -397,12 +397,14 @@ async function sendMessage() {
 
     if (data.error) {
       addMessage("エラー：" + data.error, "ai");
+      console.log("ERROR: " + data.error)
     } else {
       addMessage(data.reply, "ai");
     }
   } catch (error) {
     removeTyping();
-    addMessage("通信エラーが発生しました", "ai");
+    addMessage(error, "ai");
+    console.log("ERROR: " + error)
   }
 }
 
