@@ -2,7 +2,13 @@
 AIと会話できるチャットアプリです。
 
 ## 使い方
-### 必要なもの
+
+### 開発者のサーバーでチャットする
+[サーバー１へアクセス](https://another-duckbill-editor.ngrok-free.dev)(https://another-duckbill-editor.ngrok-free.dev)
+(予期せずリンクが変わる可能性もあります)
+
+### 自前でサーバーを立てる
+#### 必要なもの
 - cURL
 - Git
 - Bun (最新推奨、開発者の環境はv1.3.14)
@@ -13,8 +19,8 @@ AIと会話できるチャットアプリです。
 3. 完了！
 
 ### 起動
-1. Google GeminiのAPIキーを`.env`に入れる
-  <br>GEMINI_API_KEY="APIKEY" ←こんな感じの内容
+1. `.env.example`を`.env`にリネームする
+2. `.env`の`GEMINI_API_KEY`にAPIキーを入れて保存
 3. `bun start`を実行し、`https://localhost:3000`へブラウザでアクセス
 
 ### サンプル
