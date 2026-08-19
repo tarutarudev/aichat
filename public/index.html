@@ -198,7 +198,7 @@ body {
   transform: scale(0.92);
 }
 
-/* AI入力中 */
+/* AI 入力中 */
 .typing {
   display: flex;
   gap: 4px;
@@ -324,7 +324,7 @@ function addMessage(text, type) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-/* AI入力中表示 */
+/* AI 入力中表示 */
 function showTyping() {
 
   const row = document.createElement("div");
@@ -355,7 +355,7 @@ function showTyping() {
   chat.scrollTop = chat.scrollHeight;
 }
 
-/* AI入力中を削除 */
+/* AI 入力中を削除 */
 function removeTyping() {
   const typing = document.getElementById("typingMessage");
 
@@ -377,29 +377,13 @@ function sendMessage() {
   input.value = "";
   input.focus();
 
-  /* 1秒後にAIが返信 */
-  setTimeout(() => {
-
-    showTyping();
-
-    setTimeout(() => {
-
-      removeTyping();
-
-      addMessage(
-        "メッセージありがとう。これはダミーのAI返信だよ。",
-        "ai"
-      );
-
-    }, 600);
-
-  }, 1000);
-}
+/* 返信(ダミー) */
+addMessage("メッセージありがとう。これはダミーの AI 返信だよ。","ai");
 
 /* 送信ボタン */
 sendButton.addEventListener("click", sendMessage);
 
-/* Enterキーでも送信 */
+/* Enter キーでも送信 */
 input.addEventListener("keydown", (event) => {
 
   if (event.key === "Enter") {

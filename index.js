@@ -1,14 +1,27 @@
-let express = require('express');
-let app = express();
-let ejs = require('ejs');
-const haikus = require('./haikus.json');
-const port = process.env.PORT || 3000;
+import { Elysia } from 'elysia';
 
-app.use(express.static('public'))
-app.set('view engine', 'ejs');
+const app = new Elysia()
+  // 静的ファイルの提供
+  .get('/public/*', ({ path }) => {
+    const filePath = `./public${path}`;
+    try {
+      const file = Bun.file(filePath);
+      const contentType = file.type || 'text/html';
+      return new Response(file, {
+        headers: { 'Content-Type': contentType }
+      });
+    } catch {
+      return new Response('Not Found', { status: 404 });
+    }
+  })
 
-app.get('/', (req, res) => {
-  res.render('index', {haikus: haikus});
-});
+  // メインページ
+  .get('/', () => {
+    const file = Bun.file('./public/index.html');
+    return new Response(file, {
+      headers: { 'Content-Type': 'text/html' }
+    });
+  })
+  .listen(3000);
 
-app.listen(port);
+console.log(`http://localhost:${app.server.port} でサーバー動かしたやでー`);

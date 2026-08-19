@@ -1,19 +1,15 @@
 {
-    "name": "app-service-hello-world",
-    "description": "Simple Hello World Node.js sample for Azure App Service",
-    "version": "0.0.1",
+    "name": "aichat",
+    "description": "AI Chat",
+    "version": "1.0.0",
     "private": true,
     "license": "MIT",
-    "author": "Microsoft",
+    "type": "module",
     "scripts": {
-        "start": "node index.js",
-        "dev": "nodemon"
+        "start": "bun run index.js",
+        "dev": "bun --watch index.js"
     },
     "dependencies": {
-        "ejs": "^3.1.10",
-        "express": "^4.22.2"
-    },
-    "devDependencies": {
-        "nodemon": "^2.0.19"
+        "elysia": "^1.4.26"
     }
 }
