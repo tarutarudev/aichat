@@ -12,3 +12,7 @@ node_modules/
 .env
 .env.local
 *.env.*
+
+# Binary
+server
+aichat

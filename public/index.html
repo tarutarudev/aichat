@@ -280,6 +280,9 @@ const input = document.getElementById("messageInput");
 const sendButton = document.getElementById("sendButton");
 const chat = document.getElementById("chat");
 
+/* セッション ID の管理 */
+let sessionId = localStorage.getItem("chatSessionId") || null;
+
 /* 現在時刻 */
 function getTime() {
   const now = new Date();
@@ -387,10 +390,16 @@ async function sendMessage() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ message: text })
+      body: JSON.stringify({ message: text, sessionId: sessionId })
     });
 
     const data = await response.json();
+
+    /* セッションIDを保存 */
+    if (data.sessionId) {
+      sessionId = data.sessionId;
+      localStorage.setItem("chatSessionId", sessionId);
+    }
 
     /* 入力中を削除 */
     removeTyping();

@@ -2,12 +2,14 @@ import { Elysia } from 'elysia';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
+
+// セッションを簡易的に実装してみた！
+const chatSessions = new Map();
 
 const app = new Elysia()
   .post('/api/chat', async ({ body }) => {
     try {
-      const { message } = body;
+      const { message, sessionId } = body;
 
       if (!message) {
         return new Response(JSON.stringify({ error: 'メッセージが必要です。' }), {
@@ -16,11 +18,24 @@ const app = new Elysia()
         });
       }
 
-      const result = await model.generateContent(message);
-      const response = await result.response;
-      const text = response.text();
+      // セッションIDがなければ新規作成
+      const uid = sessionId || `session_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
-      return new Response(JSON.stringify({ reply: text }), {
+      // セッションを取得 or 作成
+      let chat = chatSessions.get(uid);
+      if (!chat) {
+        const model = genAI.getGenerativeModel({ model: "gemini-3.6-flash" });
+        chat = model.startChat({
+          history: []
+        });
+        chatSessions.set(uid, chat);
+      }
+
+      // メッセージを送信して応答を取得
+      const result = await chat.sendMessage(message);
+      const text = result.response.text();
+
+      return new Response(JSON.stringify({ reply: text, sessionId: uid }), {
         headers: { 'Content-Type': 'application/json' }
       });
     } catch (error) {
