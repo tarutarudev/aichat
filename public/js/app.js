@@ -1,5 +1,3 @@
-
-
 function getUserId() {
   let uid = localStorage.getItem('aichat_user_id');
   if (!uid) {
@@ -16,8 +14,6 @@ function getStoredSessionId(plotId) {
 function setStoredSessionId(plotId, sessionId) {
   localStorage.setItem(`aichat_session_${plotId}`, sessionId);
 }
-
-
 
 const api = {
   async getPlots() {
@@ -53,8 +49,6 @@ const api = {
     return res.json();
   },
 };
-
-
 
 function formatCount(n) {
   if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, '') + '万';
@@ -118,7 +112,6 @@ function renderStateBlock(container, { icon, title, desc, actionLabel, onAction,
 
   container.appendChild(block);
 }
-
 
 function renderPlotCard(plot, rank) {
   const card = document.createElement('button');
@@ -242,9 +235,7 @@ navTabs.forEach((btn) => {
   btn.addEventListener('click', () => switchMainTab(btn.dataset.tab));
 });
 
-
-
-let homeSubtab = 'feed'; 
+let homeSubtab = 'feed';
 let rankingPeriod = 'daily';
 let homeRequestId = 0;
 
@@ -281,7 +272,7 @@ async function loadHomeSubtab() {
       ? await api.getPlots()
       : await api.getRanking(rankingPeriod);
 
-    if (requestId !== homeRequestId) return; 
+    if (requestId !== homeRequestId) return;
 
     if (!plots.length) {
       renderStateBlock(plotListEl, homeSubtab === 'feed' ? {
@@ -349,8 +340,6 @@ async function loadHistory() {
     });
   }
 }
-
-
 
 const chatEl = document.getElementById('chat');
 const messageInput = document.getElementById('messageInput');
@@ -524,8 +513,6 @@ messageInput.addEventListener('keydown', (event) => {
     sendMessage();
   }
 });
-
-
 
 getUserId();
 switchMainTab('home');

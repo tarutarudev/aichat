@@ -11,10 +11,7 @@ import {
 } from './db.js';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-
-
-const chatSessions = new Map(); 
-
+const chatSessions = new Map();
 const RANKING_PERIODS = ['daily', 'weekly', 'monthly', 'total'];
 
 function json(data, status = 200) {
@@ -25,18 +22,17 @@ function json(data, status = 200) {
 }
 
 const app = new Elysia()
-  
+
   .group('/api/plots', (app) => app
-    
+
     .get('/', () => json({ plots: getHomeFeed() }))
 
-    
+
     .get('/ranking', ({ query }) => {
       const period = RANKING_PERIODS.includes(query.period) ? query.period : 'total';
       return json({ period, plots: getRanking(period) });
     })
 
-    
     .get('/:id', ({ params, query }) => {
       const plot = getPlotById(params.id);
       if (!plot) {
@@ -49,10 +45,10 @@ const app = new Elysia()
     })
   )
 
-  
+
   .get('/api/history', ({ query }) => json({ history: getHistory(query.userId) }))
 
-  
+
   .post('/api/chat', async ({ body }) => {
     try {
       const { message, plotId, sessionId, userId } = body;
@@ -64,7 +60,6 @@ const app = new Elysia()
         return json({ error: 'plotId が必要です。' }, 400);
       }
 
-      
       let session = sessionId ? chatSessions.get(sessionId) : null;
       if (session && session.plotId !== plotId) {
         session = null;
@@ -73,7 +68,7 @@ const app = new Elysia()
       let uid = session ? sessionId : null;
       let chat = session ? session.chat : null;
 
-      
+
       if (!chat) {
         const persona = getPlotPersona(plotId);
         if (!persona) {
@@ -91,11 +86,9 @@ const app = new Elysia()
         chatSessions.set(uid, { chat, plotId });
       }
 
-      
       const result = await chat.sendMessage(message);
       const text = result.response.text();
 
-      
       recordChatEvent(plotId);
       touchHistory(userId, plotId, uid, text);
 
@@ -106,7 +99,7 @@ const app = new Elysia()
     }
   })
 
-  
+
   .get('/public/*', ({ params }) => {
     const filePath = `./public/${params['*']}`;
     try {
@@ -120,7 +113,6 @@ const app = new Elysia()
     }
   })
 
-  
   .get('/', () => {
     const file = Bun.file('./public/index.html');
     return new Response(file, {

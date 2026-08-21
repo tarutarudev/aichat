@@ -1,14 +1,11 @@
 import { Database } from 'bun:sqlite';
 import { mkdirSync } from 'node:fs';
 
-
 mkdirSync('./data', { recursive: true });
 
 export const db = new Database('./data/aichat.db', { create: true });
 db.exec('PRAGMA journal_mode = WAL;');
 db.exec('PRAGMA foreign_keys = ON;');
-
-
 
 db.run(`
   CREATE TABLE IF NOT EXISTS plots (
@@ -47,9 +44,6 @@ db.run(`
     PRIMARY KEY (user_id, plot_id)
   )
 `);
-
-
-
 
 function spread(count, hoursAgoMin, hoursAgoMax) {
   const now = Date.now();
@@ -127,7 +121,6 @@ const CARD_SELECT = `
   FROM plots
 `;
 
-
 export function getHomeFeed() {
   return db.query(`${CARD_SELECT} ORDER BY created_at DESC`).all();
 }
@@ -137,7 +130,6 @@ const PERIOD_MS = {
   weekly: 7 * 24 * 60 * 60 * 1000,
   monthly: 30 * 24 * 60 * 60 * 1000,
 };
-
 
 export function getRanking(period) {
   if (period !== 'total' && !PERIOD_MS[period]) period = 'total';
@@ -171,7 +163,6 @@ export function getRanking(period) {
   `).all(cutoff);
 }
 
-
 export function getPlotById(id) {
   const row = db.query(`
     SELECT id, name, tagline, tag, greeting,
@@ -185,20 +176,16 @@ export function getPlotById(id) {
   return row ?? null;
 }
 
-
 export function getPlotPersona(id) {
   const row = db.query('SELECT persona FROM plots WHERE id = ?').get(id);
   return row ? row.persona : null;
 }
-
 
 export function recordChatEvent(plotId) {
   const now = Date.now();
   db.run('INSERT INTO chat_events (plot_id, occurred_at) VALUES (?, ?)', [plotId, now]);
   db.run('UPDATE plots SET total_chat_count = total_chat_count + 1 WHERE id = ?', [plotId]);
 }
-
-
 
 export function touchHistory(userId, plotId, sessionId, lastMessage) {
   if (!userId) return;
@@ -211,7 +198,6 @@ export function touchHistory(userId, plotId, sessionId, lastMessage) {
       last_opened_at = excluded.last_opened_at
   `, [userId, plotId, sessionId ?? null, lastMessage ?? null, Date.now()]);
 }
-
 
 export function getHistory(userId) {
   if (!userId) return [];

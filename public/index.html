@@ -10,10 +10,7 @@
 <body>
 
 <div class="app" id="app">
-
   <div class="screen-stack">
-
-    
     <section class="screen" id="screen-home" data-screen="home">
       <header class="subnav">
         <button class="subnav-tab is-active" data-subtab="feed" type="button">ホーム</button>
@@ -27,14 +24,10 @@
       </div>
       <div class="plot-list" id="plotList"></div>
     </section>
-
-    
     <section class="screen is-hidden" id="screen-chat" data-screen="chat">
       <header class="screen-header"><h1>チャット</h1></header>
       <div class="history-list" id="historyList"></div>
     </section>
-
-    
     <section class="screen is-hidden" id="screen-create" data-screen="create">
       <header class="screen-header"><h1>作成</h1></header>
       <div class="stub-screen">
@@ -43,8 +36,6 @@
         <p class="stub-desc">これから実装します。<br>もう少しだけお待ちください。</p>
       </div>
     </section>
-
-    
     <section class="screen is-hidden" id="screen-account" data-screen="account">
       <header class="screen-header"><h1>アカウント</h1></header>
       <div class="stub-screen">
@@ -53,8 +44,6 @@
         <p class="stub-desc">これから実装します。<br>もう少しだけお待ちください。</p>
       </div>
     </section>
-
-    
     <section class="screen screen-room is-hidden" id="screen-room" data-screen="room">
       <header class="header">
         <button class="back-button" id="backButton" type="button" aria-label="戻る">‹</button>
@@ -64,9 +53,7 @@
           <div class="header-status">オンライン</div>
         </div>
       </header>
-
       <main class="chat" id="chat"></main>
-
       <div class="input-area">
         <input
           id="messageInput"
@@ -78,10 +65,7 @@
         <button id="sendButton" class="send-button" type="button">➤</button>
       </div>
     </section>
-
   </div>
-
-  
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-tab is-active" data-tab="home" type="button">
       <span class="nav-icon">🏠</span><span class="nav-label">ホーム</span>
@@ -96,7 +80,6 @@
       <span class="nav-icon">👤</span><span class="nav-label">アカウント</span>
     </button>
   </nav>
-
 </div>
 
 <script src="/public/js/app.js"></script>
