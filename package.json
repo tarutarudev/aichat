@@ -1,17 +1,36 @@
 {
-    "name": "aichat",
-    "description": "AI Chat",
-    "version": "1.0.0",
-    "private": true,
-    "license": "MIT",
-    "type": "module",
-    "scripts": {
-        "start": "bun run index.js",
-        "dev": "bun --watch index.js",
-        "build": "bun build --compile --bytecode --minify --outfile mainServer ."
-    },
-    "dependencies": {
-      "@google/generative-ai": "^0.24.1",
-      "elysia": "^1.4.26"
-    }
+  "name": "aichat",
+  "description": "AI Chat",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "bun .",
+    "dev": "bun --watch .",
+
+    "build:linux-x64": "bun build --bytecode --compile --minify --target bun-linux-x64 .",
+    "build:linux-x64-baseline": "bun build --bytecode --compile --minify --target bun-linux-x64-baseline .",
+    "build:linux-x64-modern": "bun build --bytecode --compile --minify --target bun-linux-x64-modern .",
+    "build:linux-x64-musl": "bun build --bytecode --compile --minify --target bun-linux-x64-musl .",
+    "build:linux-arm64": "bun build --bytecode --compile --minify --target bun-linux-arm64 .",
+
+    "build:darwin-x64": "bun build --bytecode --compile --minify --target bun-darwin-x64 .",
+    "build:darwin-arm64": "bun build --bytecode --compile --minify --target bun-darwin-arm64 .",
+
+    "build:windows-x64": "bun build --bytecode --compile --minify --target bun-windows-x64 .",
+    "build:windows-x64-baseline": "bun build --bytecode --compile --minify --target bun-windows-x64-baseline .",
+    "build:windows-x64-modern": "bun build --bytecode --compile --minify --target bun-windows-x64-modern .",
+    "build:windows-arm64": "bun build --bytecode --compile --minify --target bun-windows-arm64 .",
+
+    "build:all": "bun run \"build:bin-*\"",
+
+    "build:bytecode": "bun build --bytecode --minify --target=bun --outdir=dist .",
+    "build:bundle": "bun build --minify --target=bun --outdir=dist ."
+  },
+  "dependencies": {
+    "@google/genai": "latest",
+    "@types/bun": "latest",
+    "elysia": "latest"
+  }
 }
