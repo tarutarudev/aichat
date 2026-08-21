@@ -23,7 +23,7 @@
     "build:windows-x64-modern": "bun build --bytecode --compile --minify --target bun-windows-x64-modern .",
     "build:windows-arm64": "bun build --bytecode --compile --minify --target bun-windows-arm64 .",
 
-    "build:all": "bun run \"build:bin-*\"",
+    "build:all": "bun run \"build:*\"",
 
     "build:bytecode": "bun build --bytecode --minify --target=bun --outdir=dist .",
     "build:bundle": "bun build --minify --target=bun --outdir=dist ."
