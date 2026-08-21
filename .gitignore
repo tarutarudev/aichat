@@ -7,3 +7,6 @@ bun.lock
 
 # Binary
 mainServer
+
+# Database
+data/
